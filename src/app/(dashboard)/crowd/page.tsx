@@ -1,9 +1,11 @@
 import { PageHeader } from "@/components/layout/page-header";
 import { MetricCard } from "@/components/features/metric-card";
 import { ZoneGrid } from "@/components/features/zone-grid";
+import { RecommendationCard } from "@/components/features/recommendation-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusBadge } from "@/components/ui/badge";
 import { getOperationsSnapshot } from "@/lib/domain/operations";
+import { getCrowdRecommendations } from "@/lib/domain/crowd";
 import { LazyAiChatPanel, LazyChartCard } from "@/components/features/lazy-dashboard-wrappers";
 import { AlertTriangle, TrendingUp, Users, DoorOpen } from "lucide-react";
 
@@ -15,6 +17,7 @@ export default function CrowdPage() {
   const snapshot = getOperationsSnapshot();
   const { stadiumZones, gateStatuses, occupancyTrend } = snapshot;
   const criticalZones = stadiumZones.filter((z) => z.status === "critical" || z.status === "busy");
+  const recommendations = getCrowdRecommendations();
 
   return (
     <div>
@@ -45,15 +48,8 @@ export default function CrowdPage() {
               <CardTitle className="text-base">AI Recommendations</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              {[
-                "Open Gate B auxiliary lanes to reduce South Stand congestion",
-                "Deploy 4 volunteers to South Concourse for flow guidance",
-                "Redirect incoming fans from Gate E to Gate C (18 min faster)",
-                "Activate overflow seating protocol in East Stand",
-              ].map((rec) => (
-                <div key={rec} className="rounded-lg bg-primary/5 border border-primary/20 px-3 py-2 text-sm">
-                  {rec}
-                </div>
+              {recommendations.map((rec) => (
+                <RecommendationCard key={rec.content} content={rec.content} />
               ))}
             </CardContent>
           </Card>

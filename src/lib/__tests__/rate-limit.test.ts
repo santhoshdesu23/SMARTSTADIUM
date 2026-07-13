@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { rateLimit } from "@/lib/rate-limit";
 
 // Each test uses a unique key to avoid cross-test contamination

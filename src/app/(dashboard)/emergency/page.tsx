@@ -1,9 +1,11 @@
 import { PageHeader } from "@/components/layout/page-header";
 import { AiChatPanel } from "@/components/features/ai-chat-panel";
 import { MetricCard } from "@/components/features/metric-card";
+import { RecommendationCard } from "@/components/features/recommendation-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusBadge } from "@/components/ui/badge";
 import { getEmergencySnapshot } from "@/lib/domain/operations";
+import { getEmergencyActions } from "@/lib/domain/crowd";
 import { Siren, Shield, AlertTriangle, Radio } from "lucide-react";
 
 export const metadata = {
@@ -12,6 +14,7 @@ export const metadata = {
 
 export default function EmergencyPage() {
   const { incidents, open, critical } = getEmergencySnapshot();
+  const emergencyActions = getEmergencyActions();
 
   return (
     <div>
@@ -59,18 +62,8 @@ export default function EmergencyPage() {
             <CardTitle className="text-base">AI Emergency Response Plan</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {[
-              { step: 1, action: "Deploy security team to North Parking Lot — unauthorized vehicle" },
-              { step: 2, action: "Open Gate B auxiliary lanes to relieve South Stand congestion" },
-              { step: 3, action: "Alert medical team — heat exhaustion case resolved, monitor East Concourse" },
-              { step: 4, action: "Notify fans via app: redirect Gate E traffic to Gate C" },
-            ].map((item) => (
-              <div key={item.step} className="flex gap-3 rounded-lg bg-destructive/5 border border-destructive/20 px-4 py-3">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-destructive/20 text-xs font-bold text-destructive">
-                  {item.step}
-                </span>
-                <p className="text-sm">{item.action}</p>
-              </div>
+            {emergencyActions.map((item) => (
+              <RecommendationCard key={item.step} step={item.step} content={item.action} variant="emergency" />
             ))}
           </CardContent>
         </Card>

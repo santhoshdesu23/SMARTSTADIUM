@@ -23,14 +23,14 @@ export function generateMockResponse(
   const lower = userMessage.toLowerCase();
 
   if (type === "stadium") {
+    if (lower.includes("seat") || lower.includes("section")) {
+      return "Your seat is in **Section 214, Row 12, Seat 8** (South Stand). Take the escalator at Gate E, turn left at Concourse B, and follow signs to Section 214. Estimated walk time: 6 minutes. Need accessible route alternatives?";
+    }
     if (lower.includes("gate") || lower.includes("enter")) {
       return "Based on current crowd data, I recommend **Gate C (East)** — only a 4-minute wait with full accessibility support. Gate E has 22-minute waits due to South Stand congestion. Would you like turn-by-turn directions from your current location?";
     }
     if (lower.includes("food") || lower.includes("eat")) {
       return "Popular options near you:\n\n• **Taco Stand 214** — 3 min walk, low queue\n• **International Food Court** — Concourse A, 8 min\n• **VIP Dining** — Requires lounge pass\n\nAll locations offer vegetarian and allergen-free options. Shall I filter by dietary requirements?";
-    }
-    if (lower.includes("seat") || lower.includes("section")) {
-      return "Your seat is in **Section 214, Row 12, Seat 8** (South Stand). Take the escalator at Gate E, turn left at Concourse B, and follow signs to Section 214. Estimated walk time: 6 minutes. Need accessible route alternatives?";
     }
     return "Welcome to MetLife Stadium! I'm your AI stadium assistant for USA vs Mexico. I can help with navigation, seating, food, match info, and real-time updates. What do you need?";
   }

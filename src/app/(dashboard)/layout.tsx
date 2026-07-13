@@ -20,7 +20,7 @@ export default function DashboardLayout({
       if (!allowed) {
         router.replace("/");
       }
-    } catch (e) {
+    } catch {
       router.replace("/");
     }
   }, [pathname, router]);

@@ -12,6 +12,7 @@ import type { ThemeMode } from "@/types";
 
 const STORAGE_KEY = "stadiumos-theme";
 const DEFAULT_THEME: ThemeMode = "dark";
+const VALID_THEMES: ThemeMode[] = ["dark", "light", "high-contrast", "colorblind"];
 
 interface ThemeContextValue {
   theme: ThemeMode;
@@ -21,18 +22,29 @@ interface ThemeContextValue {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
+function getStoredTheme(): ThemeMode {
+  if (typeof window === "undefined") {
+    return DEFAULT_THEME;
+  }
+
+  const stored = localStorage.getItem(STORAGE_KEY);
+  return VALID_THEMES.includes(stored as ThemeMode) ? (stored as ThemeMode) : DEFAULT_THEME;
+}
+
+function getInitialReducedMotionPreference(): boolean {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<ThemeMode>(DEFAULT_THEME);
-  const [reducedMotion, setReducedMotion] = useState(false);
+  const [theme, setThemeState] = useState<ThemeMode>(getStoredTheme);
+  const [reducedMotion, setReducedMotion] = useState(getInitialReducedMotionPreference);
 
-  // Initialise from storage and detect reduced-motion preference
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY) as ThemeMode | null;
-    if (stored) setThemeState(stored);
-
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReducedMotion(mq.matches);
-
     const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
     mq.addEventListener("change", handler);
     return () => mq.removeEventListener("change", handler);
@@ -47,7 +59,18 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(STORAGE_KEY, theme);
   }, [theme]);
 
-  const setTheme = useCallback((t: ThemeMode) => setThemeState(t), []);
+  useEffect(() => {
+    function handleStorage(event: StorageEvent) {
+      if (event.key === STORAGE_KEY && VALID_THEMES.includes(event.newValue as ThemeMode)) {
+        setThemeState(event.newValue as ThemeMode);
+      }
+    }
+
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, []);
+
+  const setTheme = useCallback((nextTheme: ThemeMode) => setThemeState(nextTheme), []);
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme, reducedMotion }}>

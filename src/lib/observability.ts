@@ -23,7 +23,8 @@ function serialize(obj: LogEntry | ErrorEntry): string {
   }
 }
 
-const isTest = process.env.NODE_ENV === "test";
+// Allow test environment to override the guard via environment variable
+const isTest = process.env.NODE_ENV === "test" && process.env.VITEST_ENABLE_LOGGING !== "true";
 
 export function logEvent(event: string, payload: LogPayload = {}): void {
   if (isTest) return;
@@ -33,7 +34,6 @@ export function logEvent(event: string, payload: LogPayload = {}): void {
     event,
     payload,
   };
-  // eslint-disable-next-line no-console
   console.info(serialize(entry));
 }
 
@@ -48,6 +48,5 @@ export function reportError(error: unknown, context = "app"): void {
         ? { message: error.message, stack: error.stack }
         : { message: String(error) },
   };
-  // eslint-disable-next-line no-console
   console.error(serialize(entry));
 }

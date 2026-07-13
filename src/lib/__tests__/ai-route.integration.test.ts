@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
 
 const { streamAiResponseMock } = vi.hoisted(() => ({
@@ -186,8 +186,6 @@ describe("POST /api/ai/chat — stream error recovery", () => {
   it("returns 200 with fallback message when stream throws", async () => {
     streamAiResponseMock.mockImplementation(async function* () {
       throw new Error("OpenAI down");
-      // eslint-disable-next-line no-unreachable
-      yield "";
     });
     const res = await POST(makeRequest(validBody));
     expect(res.status).toBe(200);

@@ -3,10 +3,7 @@
 import { useCallback, useRef, useState } from "react";
 import type { AiAssistantType, ChatMessage } from "@/types";
 import { reportError } from "@/lib/observability";
-
-const MAX_MESSAGE_LENGTH = 4000;
-const MAX_VISIBLE_CHARS = 20_000;
-const UI_FLUSH_INTERVAL_MS = 60;
+import { AI_CHAT } from "@/lib/constants";
 
 interface UseAiChatOptions {
   assistantType: AiAssistantType;
@@ -45,8 +42,8 @@ export function useAiChat({ assistantType, language }: UseAiChatOptions): UseAiC
       const trimmed = content.trim();
       if (!trimmed || isLoadingRef.current) return;
 
-      if (trimmed.length > MAX_MESSAGE_LENGTH) {
-        setError(`Message exceeds ${MAX_MESSAGE_LENGTH} characters.`);
+      if (trimmed.length > AI_CHAT.MAX_MESSAGE_LENGTH) {
+        setError(`Message exceeds ${AI_CHAT.MAX_MESSAGE_LENGTH} characters.`);
         return;
       }
 
@@ -107,14 +104,14 @@ export function useAiChat({ assistantType, language }: UseAiChatOptions): UseAiC
 
           accumulated += decoder.decode(value, { stream: true });
 
-          if (performance.now() - lastFlush > UI_FLUSH_INTERVAL_MS) {
-            flushContent(assistantId, accumulated.slice(-MAX_VISIBLE_CHARS));
+          if (performance.now() - lastFlush > AI_CHAT.UI_FLUSH_INTERVAL_MS) {
+            flushContent(assistantId, accumulated.slice(-AI_CHAT.MAX_VISIBLE_CHARS));
             lastFlush = performance.now();
           }
         }
 
         // Always flush the final accumulated content.
-        flushContent(assistantId, accumulated.slice(-MAX_VISIBLE_CHARS));
+        flushContent(assistantId, accumulated.slice(-AI_CHAT.MAX_VISIBLE_CHARS));
       } catch (err) {
         if ((err as Error).name !== "AbortError") {
           reportError(err, "ai-chat");

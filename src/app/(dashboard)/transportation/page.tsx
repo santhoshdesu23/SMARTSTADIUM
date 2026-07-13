@@ -4,19 +4,11 @@ import { MetricCard } from "@/components/features/metric-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusBadge } from "@/components/ui/badge";
 import { getTransportationSnapshot } from "@/lib/domain/operations";
+import { getTransportIconEmoji, getCrowdLevelBadgeStatus } from "@/lib/domain/navigation";
 import { Bus, Bike, Leaf, Clock } from "lucide-react";
 
 export const metadata = {
   title: "Transportation Hub",
-};
-
-const typeIcons: Record<string, string> = {
-  metro: "🚇",
-  bus: "🚌",
-  shuttle: "🚐",
-  bike: "🚲",
-  walk: "🚶",
-  rideshare: "🚗",
 };
 
 export default function TransportationPage() {
@@ -42,13 +34,13 @@ export default function TransportationPage() {
             <CardContent className="p-6">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <span className="text-2xl" role="img" aria-label={option.type}>{typeIcons[option.type]}</span>
+                  <span className="text-2xl" role="img" aria-label={option.type}>{getTransportIconEmoji(option.type)}</span>
                   <div>
                     <h3 className="font-semibold">{option.name}</h3>
                     <p className="text-sm text-muted-foreground">ETA: {option.eta} min</p>
                   </div>
                 </div>
-                <StatusBadge status={option.crowdLevel === "high" ? "busy" : option.crowdLevel === "medium" ? "busy" : "normal"} />
+                <StatusBadge status={getCrowdLevelBadgeStatus(option.crowdLevel)} />
               </div>
               <div className="mt-4 flex flex-wrap gap-2 text-xs">
                 <span className="rounded-full bg-success/10 px-2 py-1 text-success">

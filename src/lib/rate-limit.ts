@@ -1,3 +1,5 @@
+import { RATE_LIMIT } from "./constants";
+
 interface RateLimitEntry {
   count: number;
   resetAt: number;
@@ -18,8 +20,8 @@ export interface RateLimitResult {
  */
 export async function rateLimit(
   key: string,
-  limit = 30,
-  windowMs = 60_000
+  limit: number = RATE_LIMIT.DEFAULT_LIMIT,
+  windowMs: number = RATE_LIMIT.DEFAULT_WINDOW_MS
 ): Promise<RateLimitResult> {
   const now = Date.now();
 
@@ -30,6 +32,13 @@ export async function rateLimit(
   }
 
   return inMemoryRateLimit(key, limit, windowMs, now);
+}
+
+interface RedisClient {
+  incr(key: string): Promise<number>;
+  pexpire(key: string, ms: number): Promise<number>;
+  pttl(key: string): Promise<number>;
+  quit(): Promise<string>;
 }
 
 async function tryRedisRateLimit(
@@ -43,13 +52,7 @@ async function tryRedisRateLimit(
     // The conditional means bundlers won't statically trace this import.
     const mod = await import("ioredis");
     const Redis = mod.default ?? mod;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const client = new (Redis as any)(redisUrl) as {
-      incr(key: string): Promise<number>;
-      pexpire(key: string, ms: number): Promise<number>;
-      pttl(key: string): Promise<number>;
-      quit(): Promise<string>;
-    };
+    const client = new Redis(redisUrl) as RedisClient;
 
     const count = await client.incr(key);
     if (count === 1) await client.pexpire(key, windowMs);

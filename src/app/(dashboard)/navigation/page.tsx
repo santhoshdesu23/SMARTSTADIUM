@@ -2,7 +2,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LazyAiChatPanel, LazyStadiumMap } from "@/components/features/lazy-dashboard-wrappers";
 import { StatusBadge } from "@/components/ui/badge";
-import { getNavigationSnapshot } from "@/lib/domain/operations";
+import { getPopularRoutes, getCrowdLevelBadgeStatus } from "@/lib/domain/navigation";
 import { MapPin, Navigation, Clock, Accessibility } from "lucide-react";
 import { MetricCard } from "@/components/features/metric-card";
 
@@ -10,15 +10,8 @@ export const metadata = {
   title: "Smart Navigation",
 };
 
-const routes = [
-  { id: "r1", from: "Main Entrance", to: "Section 214", time: "6 min", accessible: true, crowd: "medium" },
-  { id: "r2", from: "Gate C", to: "Food Court A", time: "4 min", accessible: true, crowd: "low" },
-  { id: "r3", from: "Gate E", to: "Section 112", time: "8 min", accessible: true, crowd: "high" },
-  { id: "r4", from: "Parking Lot K", to: "Gate D", time: "12 min", accessible: true, crowd: "low" },
-];
-
 export default function NavigationPage() {
-  const { gateStatuses } = getNavigationSnapshot();
+  const routes = getPopularRoutes();
   return (
     <div>
       <PageHeader
@@ -49,7 +42,7 @@ export default function NavigationPage() {
                       {route.time} · {route.accessible ? "♿ Accessible" : "Standard"}
                     </p>
                   </div>
-                  <StatusBadge status={route.crowd === "high" ? "busy" : route.crowd === "medium" ? "busy" : "normal"} />
+                  <StatusBadge status={getCrowdLevelBadgeStatus(route.crowd)} />
                 </li>
               ))}
             </ul>

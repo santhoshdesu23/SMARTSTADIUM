@@ -1,7 +1,8 @@
 import { PageHeader } from "@/components/layout/page-header";
 import { MetricCard } from "@/components/features/metric-card";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { StatListItem } from "@/components/features/stat-list-item";
 import { getAnalyticsSnapshot } from "@/lib/domain/operations";
+import { getFanDemographics, getAnalyticsMetrics } from "@/lib/domain/analytics";
 import { siteConfig } from "@/config/site";
 import { BarChart3, TrendingUp, Users, Globe } from "lucide-react";
 import { formatNumber } from "@/lib/utils";
@@ -11,14 +12,10 @@ export const metadata = {
   title: "Analytics Dashboard",
 };
 
-const fanDemographics = [
-  { timestamp: "Local", value: 45 },
-  { timestamp: "National", value: 35 },
-  { timestamp: "International", value: 20 },
-];
-
 export default function AnalyticsPage() {
   const { occupancyTrend, totalOccupancy, occupancyPercent } = getAnalyticsSnapshot();
+  const fanDemographics = getFanDemographics();
+  const analyticsMetrics = getAnalyticsMetrics();
   return (
     <div>
       <PageHeader
@@ -39,23 +36,8 @@ export default function AnalyticsPage() {
       </div>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-3">
-        {[
-          { title: "Concession Sales", value: "$2.4M", change: "+18%" },
-          { title: "Merchandise", value: "$890K", change: "+24%" },
-          { title: "Avg Dwell Time", value: "4.2 hrs", change: "+0.3 hrs" },
-          { title: "App Sessions", value: "34,200", change: "+42%" },
-          { title: "AI Queries", value: "8,450", change: "+67%" },
-          { title: "NPS Score", value: "78", change: "+6 pts" },
-        ].map((item) => (
-          <Card key={item.title} className="glass">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">{item.title}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">{item.value}</p>
-              <p className="text-xs text-success">{item.change} vs last match</p>
-            </CardContent>
-          </Card>
+        {analyticsMetrics.map((item) => (
+          <StatListItem key={item.title} title={item.title} value={item.value} change={item.change} />
         ))}
       </div>
     </div>
