@@ -1,0 +1,17 @@
+{
+  "name": "StadiumOS — FIFA World Cup 2026",
+  "short_name": "StadiumOS",
+  "description": "AI-Powered Smart Stadium Operating System for FIFA World Cup 2026",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#030712",
+  "theme_color": "#3b82f6",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

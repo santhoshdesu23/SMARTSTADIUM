@@ -1,26 +1,246 @@
 @import "tailwindcss";
 
+/* ─────────────────────────────────────────────
+   Light mode tokens
+───────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f4f7fb;
+  --panel: #e9eff6;
+  --foreground: #0f172a;
+  --foreground-soft: #334155;
+  --foreground-muted: #64748b;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --primary: #0284c7;
+  --primary-hover: #0369a1;
+  --primary-foreground: #ffffff;
+  --secondary: #dbe7f3;
+  --secondary-foreground: #1e293b;
+  --muted: #eef4f8;
+  --muted-foreground: #64748b;
+  --accent: #e0f2fe;
+  --accent-foreground: #075985;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --success: #16a34a;
+  --warning: #d97706;
+  --info: #6366f1;
+  --border: #cbd5e1;
+  --ring: #0284c7;
+  --sidebar: #ffffff;
+  --elevated: #ffffff;
+  --radius: 0.75rem;
 }
 
+/* ─────────────────────────────────────────────
+   Dark mode tokens
+───────────────────────────────────────────── */
+.dark {
+  --background: #0b1220;
+  --panel: #111827;
+  --foreground: #f8fafc;
+  --foreground-soft: #e2e8f0;
+  --foreground-muted: #cbd5e1;
+  --card: #172033;
+  --card-foreground: #f8fafc;
+  --primary: #38bdf8;
+  --primary-hover: #0ea5e9;
+  --primary-foreground: #08111f;
+  --secondary: #1e293b;
+  --secondary-foreground: #e2e8f0;
+  --muted: #162133;
+  --muted-foreground: #b8c4d6;
+  --accent: #22314a;
+  --accent-foreground: #e2e8f0;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --info: #818cf8;
+  --border: #32435f;
+  --ring: #38bdf8;
+  --sidebar: #0f172a;
+  --elevated: #1e293b;
+}
+
+/* ─────────────────────────────────────────────
+   High-contrast mode
+───────────────────────────────────────────── */
+.high-contrast {
+  --background: #000000;
+  --panel: #000000;
+  --foreground: #ffffff;
+  --foreground-soft: #ffffff;
+  --foreground-muted: #dddddd;
+  --card: #111111;
+  --card-foreground: #ffffff;
+  --primary: #ffff00;
+  --primary-hover: #e6e600;
+  --primary-foreground: #000000;
+  --secondary: #333333;
+  --secondary-foreground: #ffffff;
+  --muted: #1a1a1a;
+  --muted-foreground: #dddddd;
+  --accent: #333333;
+  --accent-foreground: #ffffff;
+  --destructive: #ff4444;
+  --destructive-foreground: #000000;
+  --success: #00ff88;
+  --warning: #ffaa00;
+  --info: #aabbff;
+  --border: #ffffff;
+  --ring: #ffff00;
+  --sidebar: #000000;
+  --elevated: #222222;
+}
+
+/* ─────────────────────────────────────────────
+   Colorblind-friendly overrides
+───────────────────────────────────────────── */
+.colorblind {
+  --primary: #0077bb;
+  --primary-hover: #005f99;
+  --success: #009988;
+  --warning: #ee7733;
+  --destructive: #cc3311;
+  --info: #33bbee;
+}
+
+/* ─────────────────────────────────────────────
+   Tailwind 4 theme mapping
+───────────────────────────────────────────── */
 @theme inline {
   --color-background: var(--background);
+  --color-panel: var(--panel);
   --color-foreground: var(--foreground);
+  --color-foreground-soft: var(--foreground-soft);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-elevated: var(--elevated);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --radius-lg: var(--radius);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ─────────────────────────────────────────────
+   Reduced motion
+───────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
+/* ─────────────────────────────────────────────
+   Base
+───────────────────────────────────────────── */
+html {
+  color-scheme: light dark;
+}
+
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Better default text readability */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--foreground);
+}
+
+p, span, li, label, small {
+  color: var(--foreground-soft);
+}
+
+.text-muted {
+  color: var(--foreground-muted);
+}
+
+/* Links and interactive text */
+a {
+  color: var(--foreground);
+}
+
+a:hover {
+  color: var(--primary);
+}
+
+/* Glass / cards */
+.glass {
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--card-foreground);
+}
+
+.light .glass {
+  background: rgba(255, 255, 255, 0.88);
+}
+
+/* Stronger card separation */
+.surface-card {
+  background: var(--card);
+  color: var(--card-foreground);
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Gradient mesh */
+.gradient-mesh {
+  background:
+    radial-gradient(at 15% 15%, rgba(56, 189, 248, 0.10) 0, transparent 55%),
+    radial-gradient(at 85% 5%, rgba(129, 140, 248, 0.08) 0, transparent 55%),
+    radial-gradient(at 50% 95%, rgba(34, 197, 94, 0.06) 0, transparent 55%),
+    var(--background);
+}
+
+/* Accessibility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Hero fade */
+@keyframes hero-fade-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-content {
+  animation: hero-fade-in 0.5s ease-out both;
 }
